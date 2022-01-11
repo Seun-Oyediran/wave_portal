@@ -64,6 +64,17 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const wavePortalContract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+
+      // await wavePortalContract.wave();
+      let count = await wavePortalContract.getTotalWaves();
+      setWaves(count);
     } catch (error) {
       console.log(error);
     }
