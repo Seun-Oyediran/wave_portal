@@ -11,6 +11,19 @@ export default function App() {
   const [waves, setWaves] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const countWaves = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const wavePortalContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      signer
+    );
+
+    let count = await wavePortalContract.getTotalWaves();
+    setWaves(count);
+  };
+
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
@@ -30,17 +43,7 @@ export default function App() {
         console.log("Found an authorized account:", account);
         setCurrentAccount(account);
 
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const wavePortalContract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          signer
-        );
-
-        // await wavePortalContract.wave();
-        let count = await wavePortalContract.getTotalWaves();
-        setWaves(count);
+        await countWaves();
       } else {
         console.log("No authorized account found");
       }
@@ -64,17 +67,7 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const wavePortalContract = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
-
-      // await wavePortalContract.wave();
-      let count = await wavePortalContract.getTotalWaves();
-      setWaves(count);
+      await countWaves();
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +91,7 @@ export default function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
       } else {
+        alert("Get MetaMask!");
         console.log("Ethereum object doesn't exist!");
       }
       setLoading(false);
@@ -109,6 +103,7 @@ export default function App() {
 
   useEffect(() => {
     checkIfWalletIsConnected();
+    //eslint-disable-next-line
   }, []);
 
   return (
@@ -132,9 +127,11 @@ export default function App() {
           wallet and wave at me!
         </div>
 
-        <button disabled={loading} className="waveButton" onClick={wave}>
-          {loading ? "Loading..." : "Wave at Me"}
-        </button>
+        {currentAccount && (
+          <button disabled={loading} className="waveButton" onClick={wave}>
+            {loading ? "Loading..." : "Wave at Me"}
+          </button>
+        )}
 
         {!currentAccount && (
           <button className="waveButton connect" onClick={connectWallet}>
