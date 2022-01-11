@@ -37,3 +37,11 @@
 .waveButton:hover {
   background-color: #d84315;
 }
+
+.waveButton.connect {
+  background-color: #0277bd;
+}
+
+.waveButton.waveButton.connect:hover {
+  background-color: #0288d1;
+}
