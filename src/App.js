@@ -218,12 +218,6 @@ export default function App() {
             Ethereum wallet and wave at me!
           </div>
 
-          {!currentAccount && (
-            <button className="waveButton connect" onClick={connectWallet}>
-              Connect Wallet
-            </button>
-          )}
-
           {currentAccount ? (
             <div className="my-2">
               <Form
