@@ -229,7 +229,8 @@ const Vote = () => {
         wavePortalContract.off("NewVote", onNewWave);
       }
     };
-  }, [results]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (show) {
